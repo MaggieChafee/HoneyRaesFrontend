@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { createServiceTicket } from "../../data/serviceTicketsData";
 import { getCustomers } from "../../data/customerData";
+import { getEmployees } from "../../data/employeeData"
+import PropTypes from "prop-types";
 
 const initialState = {
   id: 0,
@@ -9,17 +11,28 @@ const initialState = {
   employeeId: 0,
   description: '',
   emergency: false,
-  dateCompleted: null,
 }
 
 export default function CreateTicket() {
-  const [formInput, setFormInput] = useState({initialState});
+  const [formInput, setFormInput] = useState(initialState);
   const [employees, setEmployees] = useState([]);
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
-    getCustomers.then(setCustomers);
+    getCustomers().then(setCustomers);
+    getEmployees().then(setEmployees);
+    setFormInput
   }, [])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormInput((prevState) => (
+      {
+        ...prevState,
+        [name]: value,
+      }
+    ))}
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -38,10 +51,11 @@ export default function CreateTicket() {
           </Label>
           <Input
             id="customerId"
+            type="select"
             name="customerId"
             value={formInput.customerId}
-            type="select"
-          >{customers.map((customer) => (
+            onChange={handleChange}
+          >{customers?.map((customer) => (
             <option key={customer.id} value={customer.id}>{customer.name}</option>
             ))}
           </Input>
@@ -54,7 +68,8 @@ export default function CreateTicket() {
             id="exampleText"
             name="description"
             value={formInput.description}
-            type="textarea"
+            type="text"
+            onChange={handleChange}
           />
         </FormGroup>
         <FormGroup>
@@ -66,36 +81,18 @@ export default function CreateTicket() {
             name="employeeId"
             value={formInput.employeeId}
             type="select"
-          >
-            <option>
-             87
-            </option>
-            <option>
-             77
-            </option>
-            <option>
-              90
-            </option>
+            onChange={handleChange}
+          >{employees?.map((employee) => (
+            <option key={employee.id} value={employee.id}>{employee.name}</option>
+            ))}
           </Input>
         </FormGroup>
         <FormGroup check>
           <Label check for="emergency">
             This is an emergency.
           </Label>
-          <Input id="emergency" type="checkbox" name="emergency" checked={formInput.emergency} />
+          <Input id="emergency" type="checkbox" name="emergency" checked={formInput.emergency} onChange={handleChange} />
           
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleDate">
-            DateCompleted
-          </Label>
-          <Input
-            id="exampleDate"
-            name="date"
-            value-={formInput.dateCompleted}
-            placeholder="date placeholder"
-            type="date"
-          />
         </FormGroup>
         <Button
         color="primary"

@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 export default function TicketsList() {
   const [tickets, setTickets] = useState([]);
   
-  const deleteThisTicket = () => {
+  const deleteThisTicket = (id) => {
     if (window.confirm('Do you want to delete this ticket?')) {
-      deleteServiceTicket()
+      deleteServiceTicket(id);
     }
   }
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function TicketsList() {
               <Link to={`${t.id}`}>Details</Link>
             </td>
             <td>
-              <Button color="danger" size="sm" onClick={deleteThisTicket}>
+              <Button color="danger" size="sm" key={`ticket-${t.id}`} onClick={() => deleteThisTicket(t.id)}>
                 Delete
               </Button>
             </td>

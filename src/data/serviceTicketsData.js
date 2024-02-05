@@ -9,14 +9,14 @@ export const getSingleServiceTicket = (id) => {
 }
 
 export const deleteServiceTicket = (id) => new Promise((resolve, reject) => {
-  fetch(`${_apiUrl}/delete/${id}`), {
+  fetch(`${_apiUrl}/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json'
-    }.then((data) => resolve(data))
-     .catch(reject)
-  };
-})
+    },
+  }).then((data) => resolve(data))
+    .catch(reject)
+  });
 
 export const createServiceTicket = (payload) => new Promise((resolve, reject) => {
   fetch(_apiUrl, {
